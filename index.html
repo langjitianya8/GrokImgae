@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浪迹天涯 Grok 图像生成器</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 新增：标题下方链接按钮的美化样式 */
+        .title-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .title-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .title-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+        
+        .title-link:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            .title-links {
+                gap: 10px;
+            }
+            
+            .title-link {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 浪迹天涯 Grok 图像生成器</h1>
+        <p class="subtitle">Powered by 浪迹天涯Grok • 每次生成两张图片 • 自动缓存绕过403限制</p>
+        
+        <div class="main-layout">
+            <!-- 左侧输入区 -->
+            <div class="input-section">
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">🔑</span>
+                        API Key
+                    </label>
+                    <input type="password" id="apiKey" placeholder="输入您的 API Key">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">✨</span>
+                        图像描述
+                        <span class="info-tag">Ctrl+Enter 发送</span>
+                    </label>
+                    <textarea id="prompt" placeholder="描述您想要生成的图像...&#10;&#10;例如：一只穿着宇航服的柴犬在月球上行走，背景是地球，赛博朋克风格，8K超高清"></textarea>
+                </div>
+                
+                <button class="btn" id="generateBtn" onclick="generateImage()">
+                    <span id="btnIcon">🚀</span>
+                    <span id="btnText">生成图像</span>
+                    <span id="btnSpinner" class="spinner" style="display: none;"></span>
+                </button>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="settings-btn" onclick="toggleSettings()">
+                        ⚙️ 高级设置
+                    </button>
+                </div>
+                
+                <div class="advanced-settings" id="advancedSettings">
+                    <div class="form-group">
+                        <label>🌐 Base URL（图片缓存服务器）</label>
+                        <input type="text" id="baseUrl" value="http://逆向程序:端口">
+                    </div>
+                    <div class="form-group">
+                        <label>📡 API 端点</label>
+                        <input type="text" id="apiUrl" value="逆向程序:端口/v1/chat/completions">
+                    </div>
+                    <div class="form-group">
+                        <label>🤖 模型</label>
+                        <input type="text" id="model" value="grok-4.1">
+                    </div>
+                </div>
+                
+                <!-- 历史记录 -->
+                <div class="history-section" id="historySection" style="display: none;">
+                    <div class="history-title">📜 最近使用</div>
+                    <div class="history-prompts" id="historyPrompts"></div>
+                </div>
+            </div>
+            
+            <!-- 右侧输出区 -->
+            <div class="output-section">
+                <div class="output-header">
+                    <h2 class="output-title">📸 生成结果</h2>
+                    <div class="image-count" id="imageCount" style="display: none;">0 张图片</div>
+                </div>
+                
+                <div id="status" style="display: none;"></div>
+                
+                <div id="outputContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🖼️</div>
+                        <div class="empty-state-text">等待生成图像</div>
+                        <div class="empty-state-hint">输入描述并点击生成按钮开始创作</div>
+                    </div>
+                </div>
+                
+                <!-- 调试信息 -->
+                <div class="debug-section">
+                    <button class="debug-toggle" onclick="toggleDebug()">
+                        🔧 <span id="debugToggleText">显示调试信息</span>
+                    </button>
+                    <div class="debug-content" id="debugContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
